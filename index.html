@@ -131,7 +131,6 @@
             box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
         }
 
-        /* Controles móviles visibles por defecto si es touch */
         #mobile-controls {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -247,7 +246,6 @@
         <canvas id="mazeCanvas"></canvas>
     </div>
 
-    <!-- Controles para móvil siempre visibles si no es escritorio -->
     <div id="mobile-controls">
         <div></div>
         <button class="control-btn" onpointerdown="handleTouchMove(0, -1)" aria-label="Arriba">
@@ -283,7 +281,6 @@
         const overlay = document.getElementById('overlay');
         const batteryBar = document.getElementById('battery-fill');
 
-        // Game State
         let level = 1;
         let stages = 0;
         let stars = 2;
@@ -301,7 +298,6 @@
         let shadowPulse = 0;
         let timers = { shadow: null, battery: null };
 
-        // Persistent Highscore
         let bestScore = parseInt(localStorage.getItem('runa_best_val')) || 0;
         let bestName = localStorage.getItem('runa_best_name') || "---";
 
@@ -321,21 +317,29 @@
             constructor(c, r) {
                 this.c = c;
                 this.r = r;
-                this.walls = [true, true, true, true]; // T, R, B, L
+                this.walls = [true, true, true, true]; 
                 this.visited = false;
             }
 
             draw() {
                 const x = this.c * cellSize;
                 const y = this.r * cellSize;
-                ctx.strokeStyle = "rgba(168, 85, 247, 0.4)";
-                ctx.lineWidth = Math.max(1, cellSize * 0.05);
+                
+                // MEJORA VISUAL DE MUROS PARA PC
+                ctx.strokeStyle = "rgba(168, 85, 247, 0.8)"; // Más opaco
+                ctx.lineWidth = Math.max(2, cellSize * 0.08); // Un poco más grueso
+                ctx.shadowBlur = 4; // Resplandor sutil
+                ctx.shadowColor = "rgba(168, 85, 247, 0.5)";
+                
                 ctx.beginPath();
                 if (this.walls[0]) { ctx.moveTo(x, y); ctx.lineTo(x + cellSize, y); }
                 if (this.walls[1]) { ctx.moveTo(x + cellSize, y); ctx.lineTo(x + cellSize, y + cellSize); }
                 if (this.walls[2]) { ctx.moveTo(x + cellSize, y + cellSize); ctx.lineTo(x, y + cellSize); }
                 if (this.walls[3]) { ctx.moveTo(x, y + cellSize); ctx.lineTo(x, y); }
                 ctx.stroke();
+                
+                // Reset de sombras para que no afecte al resto del render
+                ctx.shadowBlur = 0;
             }
         }
 
@@ -547,7 +551,6 @@
             }
         }
 
-        // Wrappers para Touch
         function handleTouchMove(dc, dr) {
             triggerMove(dc, dr);
         }
@@ -667,11 +670,11 @@
             prepareStage();
             gameActive = true;
 
-            const speed = Math.max(200, 750 - (stages * 20));
+            const speed = Math.max(150, 700 - (stages * 25)); 
             timers.shadow = setInterval(moveShadow, speed);
 
             timers.battery = setInterval(() => {
-                battery -= (0.2 + (stages * 0.015));
+                battery -= (0.3 + (stages * 0.025)); 
                 batteryBar.style.width = Math.max(0, battery) + "%";
                 if (battery <= 0) {
                     endGame("EXTINCIÓN", "Tu linterna se ha quedado sin energía.");
