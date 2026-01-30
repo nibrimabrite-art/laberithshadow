@@ -194,7 +194,7 @@
 <body>
 
     <header class="game-header">
-        <h1 class="game-title">RUNA</h1>
+        <h1 class="game-title">LABERINTO DE SOMBRAS</h1>
     </header>
 
     <div class="status-bar">
@@ -325,11 +325,11 @@
                 const x = this.c * cellSize;
                 const y = this.r * cellSize;
                 
-                // MEJORA VISUAL DE MUROS PARA PC
-                ctx.strokeStyle = "rgba(168, 85, 247, 0.8)"; // Más opaco
-                ctx.lineWidth = Math.max(2, cellSize * 0.08); // Un poco más grueso
-                ctx.shadowBlur = 4; // Resplandor sutil
-                ctx.shadowColor = "rgba(168, 85, 247, 0.5)";
+                // Muros reforzados para visibilidad en PC
+                ctx.strokeStyle = "rgba(168, 85, 247, 0.85)";
+                ctx.lineWidth = Math.max(2.5, cellSize * 0.1); 
+                ctx.shadowBlur = 6; 
+                ctx.shadowColor = "rgba(168, 85, 247, 0.6)";
                 
                 ctx.beginPath();
                 if (this.walls[0]) { ctx.moveTo(x, y); ctx.lineTo(x + cellSize, y); }
@@ -338,7 +338,6 @@
                 if (this.walls[3]) { ctx.moveTo(x, y + cellSize); ctx.lineTo(x, y); }
                 ctx.stroke();
                 
-                // Reset de sombras para que no afecte al resto del render
                 ctx.shadowBlur = 0;
             }
         }
@@ -398,6 +397,7 @@
             clearTimers();
             isMagicActive = false;
             
+            // Progresión de tamaño
             if (level === 1) { cols = 8; rows = 8; }
             else if (level === 2) { cols = 12; rows = 10; }
             else { cols = 16; rows = 12; }
@@ -418,6 +418,7 @@
             exit = { x: cols - 1, y: rows - 1 };
             shadow = { x: cols - 1, y: 0 };
             
+            // Runas mágicas en niveles pares
             if (level > 1 && level % 2 === 0) {
                 rune = { 
                     x: Math.floor(Math.random() * (cols-2)) + 1, 
@@ -447,7 +448,7 @@
 
             grid.forEach(c => c.draw());
 
-            // Salida
+            // Portal de Salida
             const ex = exit.x * cellSize + cellSize/2;
             const ey = exit.y * cellSize + cellSize/2;
             const exitRad = Math.max(2, cellSize/4);
@@ -458,7 +459,7 @@
             ctx.arc(ex, ey, exitRad, 0, Math.PI*2);
             ctx.fill();
 
-            // Runa
+            // Runa Recolectable
             if (rune && !rune.collected) {
                 ctx.fillStyle = "#facc15";
                 ctx.shadowColor = "#facc15";
@@ -474,7 +475,7 @@
                 ctx.fill();
             }
 
-            // Sombra
+            // Entidad de Sombra
             const sx = shadow.x * cellSize + cellSize/2;
             const sy = shadow.y * cellSize + cellSize/2;
             const shadowBaseRad = Math.max(2, cellSize/3.5);
@@ -486,7 +487,7 @@
             ctx.fill();
             shadowPulse += 0.2;
 
-            // Jugador
+            // Runa del Jugador
             ctx.shadowBlur = isMagicActive ? 25 : 0;
             ctx.shadowColor = isMagicActive ? "#facc15" : "transparent";
             ctx.fillStyle = isMagicActive ? "#facc15" : "#c084fc";
@@ -501,7 +502,7 @@
             ctx.fill();
             ctx.shadowBlur = 0;
 
-            // Linterna
+            // Efecto de Linterna Mágica
             if (gameActive) {
                 ctx.save();
                 ctx.globalCompositeOperation = 'destination-in';
@@ -509,7 +510,7 @@
                 const py = player.y * cellSize + cellSize/2;
                 
                 let radius = Math.max(20, cellSize * 3.5);
-                if (battery < 20 && Math.random() > 0.8) radius *= 0.6;
+                if (battery < 20 && Math.random() > 0.8) radius *= 0.6; // Parpadeo
 
                 const grad = ctx.createRadialGradient(px, py, 0, px, py, radius);
                 grad.addColorStop(0, 'rgba(0,0,0,1)');
@@ -534,7 +535,7 @@
                 const targetY = player.y + dr;
                 if (targetX >= 0 && targetX < cols && targetY >= 0 && targetY < rows) {
                     possible = true;
-                    isMagicActive = false;
+                    isMagicActive = false; // El paso mágico se consume
                 }
             } else {
                 if (dc === 1 && !current.walls[1]) possible = true;
@@ -571,6 +572,7 @@
             if (!current.walls[3]) options.push({x:-1, y:0});
 
             if (options.length > 0) {
+                // Persecución inteligente sutil
                 options.sort((a, b) => {
                     const distA = Math.hypot((shadow.x + a.x) - player.x, (shadow.y + a.y) - player.y);
                     const distB = Math.hypot((shadow.x + b.x) - player.x, (shadow.y + b.y) - player.y);
@@ -586,14 +588,17 @@
         }
 
         function checkEvents() {
+            // Recoger runa
             if (rune && !rune.collected && player.x === rune.x && player.y === rune.y) {
                 rune.collected = true;
                 stars++;
                 refreshUI();
             }
+            // Colisión con sombra
             if (player.x === shadow.x && player.y === shadow.y) {
                 endGame("DERROTA", "La sombra te ha reclamado.");
             }
+            // Victoria de nivel
             if (player.x === exit.x && player.y === exit.y) {
                 nextLevel();
             }
@@ -670,9 +675,11 @@
             prepareStage();
             gameActive = true;
 
+            // Dificultad incremental
             const speed = Math.max(150, 700 - (stages * 25)); 
             timers.shadow = setInterval(moveShadow, speed);
 
+            // Consumo de energía
             timers.battery = setInterval(() => {
                 battery -= (0.3 + (stages * 0.025)); 
                 batteryBar.style.width = Math.max(0, battery) + "%";
@@ -682,6 +689,7 @@
             }, 150);
         }
 
+        // Controles de teclado
         window.addEventListener('keydown', (e) => {
             if (!gameActive) return;
             if (e.code === 'Space') {
