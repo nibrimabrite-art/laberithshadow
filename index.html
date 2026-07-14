@@ -238,15 +238,24 @@
 
         // =========================================================================
         // VIDEOS DE TU CANAL (ADMINISTRACIÓN POR CÓDIGO):
-        // Puedes agregar más videos siguiendo este formato:
+        // Configura el enlace de YouTube y su título correspondiente.
         // =========================================================================
         const ADMIN_VIDEOS = [
-            "https://www.youtube.com/watch?v=M8zZMSHZ_jg",
-            "https://www.youtube.com/watch?v=5Eqb_-6y07Q", // Video atmosférico de ejemplo 1
-            "https://www.youtube.com/watch?v=s3Nf8762Kms"  // Video atmosférico de ejemplo 2
+            {
+                url: "https://www.youtube.com/watch?v=M8zZMSHZ_jg",
+                title: "Tráiler Oficial de Leyusionis"
+            },
+            {
+                url: "https://www.youtube.com/watch?v=5Eqb_-6y07Q",
+                title: "El Linaje de las Runas Marinas"
+            },
+            {
+                url: "https://www.youtube.com/watch?v=s3Nf8762Kms",
+                title: "Atardecer Dorado en el Abismo"
+            }
         ];
 
-        // Función corregida y de alta precisión para extraer la ID de YouTube
+        // Función de alta precisión para extraer la ID de YouTube
         function getYouTubeId(url) {
             try {
                 // Manejar Shorts
@@ -257,7 +266,7 @@
                 if (url.includes('/embed/')) {
                     return url.split('/embed/')[1].split(/[?#]/)[0];
                 }
-                // Expresión regular mejorada sin la barra extraña que causaba el fallo
+                // Expresión regular mejorada
                 const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\?v=|\&v=)([^#\&\?]*).*/;
                 const match = url.match(regExp);
                 if (match && match[2].length === 11) {
@@ -277,7 +286,7 @@
             return null;
         }
 
-        // Renderizar la grilla de videos de forma interactiva
+        // Renderizar la grilla de videos de forma interactiva con sus títulos
         function renderVideos() {
             const grid = document.getElementById('video-grid');
             grid.innerHTML = "";
@@ -299,16 +308,24 @@
                 const thumbUrl = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
                 
                 const card = document.createElement('div');
-                card.className = "group relative aspect-video rounded-xl overflow-hidden glass-panel border border-white/10 hover:border-amber-500/40 transition-all cursor-pointer shadow-lg";
+                card.className = "flex flex-col gap-2 group cursor-pointer";
                 card.innerHTML = `
-                    <img src="${thumbUrl}" alt="Miniatura de Video" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onclick="playVideo('${video.id}')">
-                    
-                    <!-- Capa de Play flotante con degradado suave -->
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/60 flex items-center justify-center transition-all" onclick="playVideo('${video.id}')">
-                        <div class="w-10 h-10 rounded-full bg-amber-500/90 text-white flex items-center justify-center transform group-hover:scale-110 transition-all shadow-md">
-                            <i data-lucide="play" class="w-5 h-5 fill-white ml-0.5"></i>
+                    <!-- Contenedor del reproductor de video con efectos hover -->
+                    <div class="relative aspect-video rounded-xl overflow-hidden glass-panel border border-white/10 group-hover:border-amber-500/40 transition-all shadow-lg" onclick="playVideo('${video.id}')">
+                        <img src="${thumbUrl}" alt="Miniatura de Video" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        
+                        <!-- Capa de Play flotante con degradado suave -->
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/60 flex items-center justify-center transition-all">
+                            <div class="w-10 h-10 rounded-full bg-amber-500/90 text-white flex items-center justify-center transform group-hover:scale-110 transition-all shadow-md">
+                                <i data-lucide="play" class="w-5 h-5 fill-white ml-0.5"></i>
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- Título del video abajo en formato rúnico sutil -->
+                    <p class="text-[10px] font-semibold text-slate-300 group-hover:text-amber-400 transition-colors line-clamp-2 px-1 leading-tight uppercase tracking-widest" onclick="playVideo('${video.id}')">
+                        ${video.title}
+                    </p>
                 `;
                 grid.appendChild(card);
             });
@@ -316,12 +333,14 @@
             lucide.createIcons();
         }
 
-        // Obtener lista de objetos de video con ID válidas extraídas
+        // Obtener lista de objetos de video con ID y títulos
         function getAdminItems() {
             return ADMIN_VIDEOS
-                .map(url => {
+                .map(item => {
+                    const url = typeof item === 'string' ? item : item.url;
+                    const title = typeof item === 'string' ? "Crónica Rúnica" : item.title;
                     const id = getYouTubeId(url);
-                    return id ? { id, url } : null;
+                    return id ? { id, url, title } : null;
                 })
                 .filter(v => v !== null);
         }
