@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leyusionis | Portal de Contacto</title>
+    <!-- Tailwind CSS para el diseño impecable y futurista -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Iconos Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     
@@ -74,6 +76,14 @@
             outline: none;
             background: rgba(15, 23, 42, 0.8);
         }
+
+        /* Decoración de runas mágicas */
+        .rune-symbol {
+            font-size: 0.75rem;
+            color: rgba(245, 158, 11, 0.4);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -87,10 +97,12 @@
         <nav class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex flex-col">
                 <span class="font-mystic text-lg font-bold tracking-[0.2em] text-white glow-text uppercase">LEYUSIONIS</span>
-                <span class="text-[8px] tracking-[0.4em] text-amber-300 font-bold uppercase">Portal de Contacto</span>
+                <span class="text-[8px] tracking-[0.4em] text-amber-300 font-bold uppercase flex items-center gap-1">
+                    <span>✦</span> Portal de Contacto Rúnico <span>✦</span>
+                </span>
             </div>
-            <!-- Añadido target="_blank" para que funcione correctamente abriendo en nueva pestaña desde el visualizador -->
-            <a href="https://nibrimabrite-art.github.io/leyusionis/" target="_blank" class="text-[10px] font-bold uppercase tracking-widest text-amber-300 hover:text-white flex items-center gap-2 transition-all">
+            <!-- Enlace externo con target="_blank" y noopener para visualizador -->
+            <a href="https://nibrimabrite-art.github.io/leyusionis/" target="_blank" rel="noopener noreferrer" class="text-[10px] font-bold uppercase tracking-widest text-amber-300 hover:text-white flex items-center gap-2 transition-all hover:scale-105">
                 <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Volver al Inicio
             </a>
         </nav>
@@ -99,16 +111,18 @@
     <!-- Contenido Principal -->
     <main class="max-w-4xl mx-auto px-6 pt-32 pb-16 w-full relative z-10 flex-grow flex flex-col gap-10 justify-center">
         
+        <!-- Sección de Videoteca -->
         <div class="glass-panel p-6 md:p-8 rounded-3xl shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full blur-2xl"></div>
             
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                 <div>
                     <h3 class="font-mystic text-xl text-white uppercase tracking-wide flex items-center gap-2">
-                        <i data-lucide="video" class="text-amber-400 w-5 h-5"></i> Videoteca del Universo Rúnico
+                        <i data-lucide="video" class="text-amber-400 w-5 h-5 animate-pulse"></i> Videoteca del Universo Rúnico
                     </h3>
-                    <p class="text-[10px] text-slate-300 uppercase tracking-widest mt-1">Avances y videos oficiales de nuestro universo rúnico</p>
+                    <p class="text-[10px] text-slate-300 uppercase tracking-widest mt-1">Avances y crónicas visuales de nuestro reino mágico</p>
                 </div>
+                <div class="rune-symbol font-mono">ᛚᛖᛦᚢᛛᛁᛟᚾᛁᛋ</div>
             </div>
 
             <!-- Contenedor de miniaturas de videos -->
@@ -117,12 +131,13 @@
             </div>
         </div>
 
+        <!-- Formulario de Contacto -->
         <div class="glass-panel p-8 md:p-10 rounded-3xl shadow-2xl relative overflow-hidden max-w-2xl mx-auto w-full">
             <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl"></div>
             
             <div class="text-center mb-8">
                 <h2 class="font-mystic text-3xl md:text-4xl text-white mb-2 uppercase tracking-wide">Escríbeme un Mensaje</h2>
-                <p class="text-xs text-slate-300 uppercase tracking-widest leading-relaxed">Tus pensamientos navegarán por el océano digital directo a mi bandeja</p>
+                <p class="text-xs text-slate-300 uppercase tracking-widest leading-relaxed">Tus palabras navegarán por el océano digital directo a mi bandeja mágica</p>
             </div>
 
             <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
@@ -175,9 +190,10 @@
         </div>
     </main>
 
-    <div id="video-modal" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-4 transition-all duration-300">
+    <!-- Modal para el Reproductor de Video -->
+    <div id="video-modal" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-4 transition-all duration-300 animate-fade-in">
         <div class="relative w-full max-w-3xl aspect-video glass-panel rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-            <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-10 bg-black/50 hover:bg-red-600 text-white p-2 rounded-full transition-colors">
+            <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-10 bg-black/50 hover:bg-red-600 text-white p-2 rounded-full transition-colors shadow-md">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <div id="modal-player-container" class="w-full h-full">
@@ -222,29 +238,43 @@
 
         // =========================================================================
         // VIDEOS DE TU CANAL (ADMINISTRACIÓN POR CÓDIGO):
-        // Agrega, cambia o elimina los enlaces de tus videos aquí dentro de la lista.
-        // Solo debes pegar el enlace completo (normal o Short) dentro de las comillas.
-        // Asegúrate de separar cada enlace con una coma ( , ).
+        // Puedes agregar más videos siguiendo este formato:
         // =========================================================================
         const ADMIN_VIDEOS = [
-            "https://www.youtube.com/watch?v=M8zZMSHZ_jg"
-            // Puedes agregar más videos siguiendo este formato:
-            // "https://www.youtube.com/watch?v=ID_DE_OTRO_VIDEO",
+            "https://www.youtube.com/watch?v=M8zZMSHZ_jg",
+            "https://www.youtube.com/watch?v=5Eqb_-6y07Q", // Video atmosférico de ejemplo 1
+            "https://www.youtube.com/watch?v=s3Nf8762Kms"  // Video atmosférico de ejemplo 2
         ];
 
-        // Función para extraer la ID de YouTube de cualquier enlace (normal o Short)
+        // Función corregida y de alta precisión para extraer la ID de YouTube
         function getYouTubeId(url) {
-            // Manejar enlaces estilo Shorts de YouTube
-            if (url.includes('/shorts/')) {
-                const parts = url.split('/shorts/');
-                if (parts[1]) {
-                    return parts[1].split(/[?#]/)[0];
+            try {
+                // Manejar Shorts
+                if (url.includes('/shorts/')) {
+                    return url.split('/shorts/')[1].split(/[?#]/)[0];
                 }
+                // Manejar embeds directos
+                if (url.includes('/embed/')) {
+                    return url.split('/embed/')[1].split(/[?#]/)[0];
+                }
+                // Expresión regular mejorada sin la barra extraña que causaba el fallo
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\?v=|\&v=)([^#\&\?]*).*/;
+                const match = url.match(regExp);
+                if (match && match[2].length === 11) {
+                    return match[2];
+                }
+                
+                // Fallback usando analizador de URL nativo
+                const urlObj = new URL(url);
+                if (urlObj.hostname === 'youtu.be') {
+                    return urlObj.pathname.slice(1);
+                }
+                const v = urlObj.searchParams.get('v');
+                if (v) return v;
+            } catch (e) {
+                console.warn("Fallo al procesar el enlace de video: ", url);
             }
-            // Manejar formato estándar e integraciones compartidas
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\/\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
+            return null;
         }
 
         // Renderizar la grilla de videos de forma interactiva
@@ -252,7 +282,6 @@
             const grid = document.getElementById('video-grid');
             grid.innerHTML = "";
 
-            // Filtrar y extraer IDs válidas de la lista privada de administración
             const validVideos = getAdminItems();
 
             if (validVideos.length === 0) {
@@ -267,7 +296,6 @@
             }
 
             validVideos.forEach((video) => {
-                // Obtener imagen de miniatura de alta definición de YouTube
                 const thumbUrl = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
                 
                 const card = document.createElement('div');
@@ -275,8 +303,8 @@
                 card.innerHTML = `
                     <img src="${thumbUrl}" alt="Miniatura de Video" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onclick="playVideo('${video.id}')">
                     
-                    <!-- Capa de Play flotante -->
-                    <div class="absolute inset-0 bg-black/30 group-hover:bg-black/50 flex items-center justify-center transition-all" onclick="playVideo('${video.id}')">
+                    <!-- Capa de Play flotante con degradado suave -->
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/60 flex items-center justify-center transition-all" onclick="playVideo('${video.id}')">
                         <div class="w-10 h-10 rounded-full bg-amber-500/90 text-white flex items-center justify-center transform group-hover:scale-110 transition-all shadow-md">
                             <i data-lucide="play" class="w-5 h-5 fill-white ml-0.5"></i>
                         </div>
@@ -288,7 +316,7 @@
             lucide.createIcons();
         }
 
-        // Obtener lista limpia de objetos de video con ID
+        // Obtener lista de objetos de video con ID válidas extraídas
         function getAdminItems() {
             return ADMIN_VIDEOS
                 .map(url => {
@@ -322,7 +350,7 @@
             const modal = document.getElementById('video-modal');
             const container = document.getElementById('modal-player-container');
             
-            // Destruir el iframe para detener el audio del video de fondo
+            // Destruir el iframe para detener el audio del video de fondo de inmediato
             container.innerHTML = "";
             modal.classList.remove('flex');
             modal.classList.add('hidden');
@@ -332,7 +360,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             renderVideos();
         });
-
 
         // --- NOTIFICACIONES Y TOASTS ---
 
@@ -381,7 +408,7 @@
 
             // Deshabilitar botón para evitar envíos múltiples
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Enviando...`;
+            submitBtn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Canalizando...`;
             lucide.createIcons();
 
             // Si la clave no está configurada, simula un envío perfecto para las pruebas del autor
@@ -423,13 +450,13 @@
                 const result = await response.json();
 
                 if (response.status === 200) {
-                    showToast('¡Mensaje Enviado!', 'Tu mensaje ha sido enviado directamente al autor.', 'success');
+                    showToast('¡Mensaje Enviado!', 'Tu mensaje ha sido canalizado directamente al autor.', 'success');
                     formElement.reset();
                 } else {
                     showToast('Error de Envío', result.message || 'No se pudo procesar el mensaje.', 'error');
                 }
             } catch (error) {
-                showToast('Fallo de Red', 'Hubo un problema de conexión. Inténtalo de nuevo.', 'error');
+                showToast('Fallo de Red', 'Hubo un problema de conexión con el plano digital.', 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Enviar Mensaje`;
